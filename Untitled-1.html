@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en" data-theme="light" data-accent="red">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tobore Takpor – Portfolio</title>
+  <style>
+    :root{
+      --bg:#f8f9fb; --panel:#ffffff; --text:#0f172a; --muted:#475569;
+      --border:#e5e7eb; --accent:#e11d48; --accent-2:#be123c;
+      --chip:#f1f5f9; --chip-b:#e5e7eb; --shadow:0 10px 30px rgba(2,6,23,.08);
+    }
+    html[data-theme="dark"]{
+      --bg:#0b0f19; --panel:#0f1222; --text:#e5e7eb; --muted:#cbd5e1;
+      --border:#1f2437; --chip:#0f1428; --chip-b:#1f2437; --shadow:none;
+    }
+    html[data-accent="red"]{--accent:#e11d48;--accent-2:#be123c;}
+    html[data-accent="orange"]{--accent:#f97316;--accent-2:#ea580c;}
+    html[data-accent="green"]{--accent:#059669;--accent-2:#047857;}
+    html[data-accent="blue"]{--accent:#2563eb;--accent-2:#1d4ed8;}
+    html[data-accent="pink"]{--accent:#db2777;--accent-2:#be185d;}
+
+    *{box-sizing:border-box}
+    body{margin:0;font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Inter,Arial;color:var(--text);background:var(--bg);line-height:1.6;}
+    a{color:inherit}
+    img{max-width:100%;display:block}
+    .container{max-width:1200px;margin:0 auto;display:flex;min-height:100vh}
+    .sidebar{width:260px;padding:32px;border-right:1px solid var(--border);position:sticky;top:0;height:100vh;background:var(--panel);}
+    .brand{font-size:28px;letter-spacing:.18em;font-weight:700}
+    .nav{margin-top:28px;display:flex;flex-direction:column;gap:10px}
+    .nav a{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;text-decoration:none;color:var(--muted);border:1px solid transparent;}
+    .nav a.active,.nav a:hover{color:var(--text);background:var(--chip);border-color:var(--chip-b);}
+    .side-foot{margin-top:auto;font-size:12px;color:var(--muted)}
+    main{flex:1;padding:28px 28px 60px;position:relative;}
+    .btn{
+      display:inline-flex;align-items:center;gap:8px;padding:12px 16px;border-radius:18px;
+      border:1px solid var(--border);background:transparent;cursor:pointer;color:var(--text);
+      text-decoration:none; /* no underline on buttons */
+    }
+    .btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .btn-primary:hover{background:var(--accent-2)}
+    .h1{font-size:36px;line-height:1.2;margin:0 0 10px} /* smaller so it fits one line on desktop */
+    @media(max-width:1024px){ .h1{font-size:32px} }
+    .subtitle{font-size:28px;font-weight:700}.accent{color:var(--accent)}
+    .lead{color:var(--muted);font-size:18px;max-width:60ch}
+    .frame{position:relative}
+    .corner{position:absolute;width:96px;height:96px;border:5px solid var(--accent);border-radius:18px;}
+    .corner.tl{top:-18px;left:-18px}.corner.br{bottom:-18px;right:-18px}
+    .portrait{border-radius:18px;box-shadow:var(--shadow);object-fit:cover;aspect-ratio:4/5;}
+
+    /* ===== Color Picker / Theme Buttons ===== */
+    .color-panel{position:fixed;top:40px;right:40px;background:var(--panel);border:1px solid var(--border);padding:14px 18px;border-radius:14px;box-shadow:var(--shadow);z-index:50;transition:opacity .3s,transform .3s;opacity:0;pointer-events:none;}
+    .color-panel.show{opacity:1;pointer-events:auto;transform:translateY(0);}
+    .color-btn{width:32px;height:32px;border-radius:50%;border:none;cursor:pointer;}
+    .toggle-buttons{position:fixed;top:40px;right:40px;display:flex;flex-direction:column;gap:10px;z-index:60}
+    .circle-btn{width:42px;height:42px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;background:var(--panel);cursor:pointer;box-shadow:var(--shadow)}
+
+    /* ===== Pages (slide router) ===== */
+    .pages{position:relative;overflow:hidden;}
+    .page{
+      position:absolute; inset:0;
+      background:transparent;
+      transform:translateX(100%); opacity:0;
+      transition: transform .8s ease, opacity .8s ease;
+      padding:40px 0;
+    }
+    .page.active{transform:translateX(0); opacity:1; position:relative;}
+    .page.exit-left{transform:translateX(-15%); opacity:0;}
+    .page-inner{display:grid;grid-template-columns:1.1fr .9fr;gap:36px;align-items:center}
+    @media(max-width:1024px){.page-inner{grid-template-columns:1fr}}
+    @media(max-width:920px){.sidebar{display:none}main{padding:24px}}
+    html{scroll-behavior:auto} /* router controls animation, not anchor scroll */
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .card{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:18px}
+    .muted{color:var(--muted)}
+    .contact form{display:grid;gap:12px;max-width:560px}
+    .input,.textarea{width:100%;padding:12px 14px;border-radius:14px;border:1px solid var(--border);background:transparent;color:var(--text);}
+    .textarea{min-height:140px;resize:vertical}
+    /* Tag chips for projects */
+    .chips{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{background:var(--chip);border:1px solid var(--chip-b);padding:6px 10px;border-radius:999px;font-size:12px}
+    .project-card a{
+  display:inline-block;
+  padding:12px 26px;
+  background:var(--accent);
+  color:white;
+  border-radius:30px;
+  font-weight:600;
+  text-decoration:none;
+  transition:background .3s ease;
+}
+.project-card a:hover{
+  background:var(--accent-2);
+}
+/* ---- Project button styling ---- */
+.project-card a {
+  display:inline-block;
+  padding:12px 26px;
+  background:var(--accent);
+  color:white;
+  border-radius:30px;
+  font-weight:600;
+  text-decoration:none;
+  transition:background .3s ease;
+}
+.project-card a:hover {
+  background:var(--accent-2);
+}
+
+/* ---- Social buttons on Home (GitHub, LinkedIn, Credly) ---- */
+.btn-accent {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  transition: background .3s ease;
+}
+.btn-accent:hover {
+  background: var(--accent-2);
+}
+
+  </style>
+</head>
+<body>
+  <div class="toggle-buttons">
+    <div id="gearBtn" class="circle-btn">⚙️</div>
+    <div id="themeBtn" class="circle-btn">🌙</div>
+  </div>
+
+  <div class="color-panel" id="colorPanel">
+    <h3 style="margin:0 0 8px;">Theme Colors</h3>
+    <div style="display:flex;gap:10px;">
+      <button class="color-btn" style="background:#e11d48" data-color="red"></button>
+      <button class="color-btn" style="background:#f97316" data-color="orange"></button>
+      <button class="color-btn" style="background:#059669" data-color="green"></button>
+      <button class="color-btn" style="background:#2563eb" data-color="blue"></button>
+      <button class="color-btn" style="background:#db2777" data-color="pink"></button>
+    </div>
+  </div>
+
+  <div class="container">
+    <aside class="sidebar">
+      <div class="brand">Tobore</div>
+      <nav class="nav" id="sideNav">
+        <a href="#home" class="active">🏠 Home</a>
+        <a href="#about">👤 About</a>
+        <a href="#services">🛡️ Services</a>
+        <a href="#projects">📁 Projects</a>
+        <a href="#contact">✉️ Contact</a>
+      </nav>
+      <div class="side-foot">© <span id="year"></span> Tobore Takpor</div>
+    </aside>
+
+    <main>
+      <div class="pages" id="pages">
+        <!-- HOME -->
+        <section id="home" class="page active">
+          <div class="page-inner">
+            <div>
+              <h1 class="h1">Hello, my name is <span class="accent">Tobore Takpor</span></h1>
+              <div class="subtitle">I'm a <span class="accent" id="typed">Security Analyst</span></div>
+              <p class="lead">
+                I'm an aspiring Cybersecurity Engineer with a robust background in Application Security, Information Technology and
+                hands-on experience managing network infrastructures. My interests include network or cloud security,
+                threat analysis, vulnerability management, risk assessment, DevSecOps, and security operations.
+              </p>
+              <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+                <a class="btn btn-primary" href="resume.pdf" download>⬇ Download Resume</a>
+
+                <!-- ✅ GitHub button with icon -->
+                <a class="btn btn-accent" href="https://github.com/Tobore42" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                       viewBox="0 0 24 24" fill="currentColor" style="margin-right:6px;">
+                    <path d="M12 .5a12 12 0 0 0-3.79 23.4c.6.11.82-.26.82-.58v-2.02c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.74.08-.74 1.21.09 1.84 1.25 1.84 1.25 1.07 1.83 2.8 1.3 3.49.99.11-.79.42-1.3.76-1.6-2.67-.31-5.48-1.34-5.48-5.97 0-1.32.47-2.39 1.24-3.23-.12-.31-.54-1.57.12-3.27 0 0 1.01-.32 3.31 1.23a11.5 11.5 0 0 1 6.02 0c2.3-1.55 3.31-1.23 3.31-1.23.66 1.7.24 2.96.12 3.27.77.84 1.24 1.91 1.24 3.23 0 4.64-2.81 5.66-5.49 5.97.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12 12 0 0 0 12 .5z"/>
+                  </svg>
+                  GitHub
+                </a>
+
+                <!-- ✅ LinkedIn button with icon -->
+                <a class="btn btn-accent" href="https://www.linkedin.com/in/tobore-takpor/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                       viewBox="0 0 24 24" fill="currentColor" style="margin-right:6px;">
+                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.762 2.239 5 5 5h14c2.761 0
+                             5-2.238 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268
+                             c-.966 0-1.75-.783-1.75-1.75s.784-1.75
+                             1.75-1.75 1.75.783 1.75 1.75-.784
+                             1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.026-3.061-1.865-3.061
+                             -1.868 0-2.154 1.46-2.154 2.967v5.698h-3v-10h2.881v1.367h.041c.401-.761
+                             1.379-1.562 2.839-1.562 3.037 0 3.598 2.002
+                             3.598 4.604v5.591z"/>
+                  </svg>
+                  LinkedIn
+                </a>
+
+                <!-- ✅ Credly button with badge icon (replace URL with your real Credly profile) -->
+                <a class="btn btn-accent" href="https://www.credly.com/users/tobore-takpor/badges#credly" target="_blank" rel="noopener noreferrer" aria-label="Credly badges">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                       viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                       stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                       style="margin-right:6px;">
+                    <circle cx="12" cy="8" r="5"></circle>
+                    <path d="M8.5 13.5L7 22l5-3 5 3-1.5-8.5"></path>
+                  </svg>
+                  Credly
+                </a>
+              </div>
+            </div>
+            <div class="frame">
+              <span class="corner tl"></span>
+              <img class="portrait" src="tobore.jpg" alt="Portrait of Tobore Takpor" />
+              <span class="corner br"></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section id="about" class="page">
+          <div>
+            <h2 style="font-size:30px;margin:0 0 10px">About</h2>
+            <p class="muted" style="max-width:70ch">
+              I am Tobore Takpor, a computer science student with a deep passion for cybersecurity,
+              cloud computing, and network defense. My interest in technology started from a curiosity
+              about how systems work and how they can be protected. Over time, that curiosity turned into
+              hands-on experience working on projects that focus on vulnerability assessment, system
+              hardening, and secure infrastructure management. I enjoy building solutions that combine
+              creativity and security, such as automated vulnerability scanners and cloud-based monitoring
+              tools. Outside of academics, I am an active member of tech organizations that promote diversity
+              and inclusion in STEM. My goal is to grow into a cybersecurity engineer who builds secure systems
+              and helps make cybersecurity education more accessible to everyone.
+            </p>
+          </div>
+        </section>
+
+        <!-- SERVICES -->
+        <section id="services" class="page">
+          <div>
+            <h2 style="font-size:30px;margin:0 0 10px">Services</h2>
+            <div class="grid-3" style="margin-top:16px">
+              <div class="card"><h3>Threat Analysis</h3><p class="muted">Hunting, triage, and reporting using SIEM data, detections, and intel feeds.</p></div>
+              <div class="card"><h3>Cloud & Network Security</h3><p class="muted">Hardening, IAM reviews, VPC rules, and secure baselines.</p></div>
+              <div class="card"><h3>Security Operations</h3><p class="muted">Playbooks, alert tuning, incident drills, and metrics dashboards.</p></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PROJECTS -->
+        <section id="projects" class="page">
+  <div>
+    <h2 style="font-size:30px;margin:0 0 10px">My Recent Projects :</h2>
+
+    <div class="project-grid" style="display:flex;flex-wrap:wrap;gap:24px;margin-top:20px;">
+
+      <!-- ✅ Project Card -->
+      <div class="project-card" style="
+        background:var(--panel);
+        border:1px solid var(--border);
+        border-radius:16px;
+        box-shadow:var(--shadow);
+        overflow:hidden;
+        width:420px;">
+        
+        <img src="navy.png" alt="Automated Vulnerability Scanner" style="width:100%;height:240px;object-fit:cover;">
+        
+        <div style="padding:18px 20px;">
+          <h3 style="margin:0 0 10px;font-size:22px;">Automated Vulnerability Scanner</h3>
+          <p style="margin:0 0 18px;color:var(--muted);font-size:16px;">
+            Click the button to see my non-sensitive and unclassified (open source) version of my project with the U.S Navy!
+          </p>
+
+          <a href="https://gitlab.com/tobore42-group/Tobore42-project" target="_blank">Click here</a>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+        <!-- CONTACT -->
+        <section id="contact" class="page">
+          <div>
+            <h2 style="font-size:30px;margin:0 0 10px">Contact</h2>
+            <p class="muted">Have a question or want to collaborate? Send a message.</p>
+            <form onsubmit="event.preventDefault();alert('Thanks! This demo form does not send yet.')">
+              <input class="input" placeholder="Your name" required />
+              <input class="input" type="email" placeholder="Email" required />
+              <textarea class="textarea" placeholder="Message"></textarea>
+              <button class="btn btn-primary" type="submit">Send</button>
+            </form>
+          </div>
+        </section>
+      </div>
+
+      <footer class="muted" style="padding:14px 0">Built with HTML/CSS/JS. © <span id="year2"></span> Tobore Takpor.</footer>
+    </main>
+  </div>
+
+  <script>
+    // footer years
+    document.getElementById('year').textContent=new Date().getFullYear();
+    document.getElementById('year2').textContent=new Date().getFullYear();
+
+    // color panel + theme toggle
+    const gear=document.getElementById('gearBtn');
+    const panel=document.getElementById('colorPanel');
+    gear.onclick=()=>panel.classList.toggle('show');
+    const root=document.documentElement;
+    const savedTheme=localStorage.getItem('tt-theme');
+    const savedAccent=localStorage.getItem('tt-accent');
+    if(savedTheme){root.setAttribute('data-theme',savedTheme);}
+    if(savedAccent){root.setAttribute('data-accent',savedAccent);}
+    document.getElementById('themeBtn').onclick=()=>{
+      const next=root.getAttribute('data-theme')==='dark'?'light':'dark';
+      root.setAttribute('data-theme',next); localStorage.setItem('tt-theme',next);
+    };
+    document.querySelectorAll('.color-btn').forEach(btn=>{
+      btn.addEventListener('click',()=>{ root.setAttribute('data-accent',btn.dataset.color); localStorage.setItem('tt-accent',btn.dataset.color); });
+    });
+
+    // simple typewriter on Home
+    const words=["Security Analyst","Cybersecurity Engineer","Threat Hunter"];
+    const out=document.getElementById('typed');let wi=0,ch=0,del=false;
+    function typeTick(){
+      const w=words[wi%words.length];
+      if(!del){ch++;out.textContent=w.slice(0,ch); if(ch===w.length){del=true; setTimeout(typeTick,1200); return;}}
+      else{ch--;out.textContent=w.slice(0,ch); if(ch===0){del=false; wi++;}}
+      setTimeout(typeTick,del?50:90);
+    } typeTick();
+
+    // ===== Router: slide pages =====
+    const links=[...document.querySelectorAll('#sideNav a')];
+    const pages=[...document.querySelectorAll('.page')];
+    let current=document.querySelector('.page.active');
+
+    function setActiveLink(hash){
+      links.forEach(a=>a.classList.toggle('active', a.getAttribute('href')===hash));
+    }
+
+    function showPage(id, push=true){
+      const target=document.getElementById(id);
+      if(!target || target===current) return;
+
+      // animate current out
+      current.classList.remove('active');
+      current.classList.add('exit-left');
+
+      // prepare & animate target in
+      target.classList.remove('exit-left');
+      target.classList.add('active');
+
+      // cleanup after animation (match .8s)
+      setTimeout(()=>{ current.classList.remove('exit-left'); current=target; }, 800);
+
+      if(push){ history.pushState({page:id}, '', '#'+id); }
+      setActiveLink('#'+id);
+    }
+
+    // intercept nav clicks
+    links.forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        e.preventDefault();
+        const id=a.getAttribute('href').replace('#','');
+        showPage(id, true);
+      });
+    });
+
+    // handle initial hash / default to home
+    const start = (location.hash || '#home').replace('#','');
+    if(start!=='home'){ showPage(start, false); } else { setActiveLink('#home'); }
+
+    // back/forward support
+    window.addEventListener('popstate', ()=>{
+      const id=(location.hash || '#home').replace('#','');
+      showPage(id, false);
+    });
+  </script>
+</body>
+</html>
