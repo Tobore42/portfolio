@@ -117,6 +117,24 @@
 .btn-accent:hover {
   background: var(--accent-2);
 }
+/* ===== Typewriter Cursor Animation ===== */
+.type-cursor {
+  display:inline-block;
+  width:3px;
+  height:1.2em;
+  background:var(--accent);
+  margin-left:4px;
+  animation:blink 0.8s infinite;
+  vertical-align:middle;
+  border-radius:2px;
+}
+
+/* Blink animation */
+@keyframes blink {
+  0%, 50%, 100% { opacity:1; }
+  25%, 75% { opacity:0; }
+}
+
 
   </style>
 </head>
@@ -157,7 +175,10 @@
           <div class="page-inner">
             <div>
               <h1 class="h1">Hello, my name is <span class="accent">Tobore Takpor</span></h1>
-              <div class="subtitle">I'm a <span class="accent" id="typed">Security Analyst</span></div>
+              <div class="subtitle">
+                I'm a <span class="accent" id="typed">Security Analyst</span><span class="type-cursor"></span>
+              </div>
+
               <p class="lead">
                 I'm an aspiring Cybersecurity Engineer with a robust background in Application Security, Information Technology and
                 hands-on experience managing network infrastructures. My interests include network or cloud security,
